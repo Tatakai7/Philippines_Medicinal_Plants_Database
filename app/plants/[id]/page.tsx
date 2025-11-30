@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, Suspense } from "react"
+import React, { useEffect, useState, Suspense } from "react"
 import Navigation from "@/components/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
@@ -169,17 +169,18 @@ function PlantDetailSkeleton() {
   )
 }
 
-export default function PlantDetailPage({ params }: { params: { id: string } }) {
+export default function PlantDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = React.use(params)
   const [plant, setPlant] = useState<Plant | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchPlant()
-  }, [params.id])
+  }, [resolvedParams.id])
 
   const fetchPlant = async () => {
     try {
-      const res = await fetch(`/api/plants/${params.id}`)
+      const res = await fetch(`/api/plants/${resolvedParams.id}`)
       const data = await res.json()
       setPlant(data)
     } catch (error) {

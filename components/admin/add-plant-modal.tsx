@@ -29,7 +29,9 @@ export default function AddPlantModal({ onClose, onAdd }: AddPlantModalProps) {
     image: "",
   })
 
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [error, setError] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,6 +40,28 @@ export default function AddPlantModal({ onClose, onAdd }: AddPlantModalProps) {
     setError("")
 
     try {
+      let imageUrl = formData.image
+
+      // Upload image if file is selected
+      if (imageFile) {
+        setUploading(true)
+        const uploadFormData = new FormData()
+        uploadFormData.append('file', imageFile)
+
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        })
+
+        if (!uploadResponse.ok) {
+          throw new Error('Failed to upload image')
+        }
+
+        const uploadResult = await uploadResponse.json()
+        imageUrl = uploadResult.url
+        setUploading(false)
+      }
+
       const newPlant = {
         name: formData.name,
         scientificName: formData.scientificName,
@@ -65,7 +89,7 @@ export default function AddPlantModal({ onClose, onAdd }: AddPlantModalProps) {
           .split("\n")
           .map((p) => p.trim())
           .filter((p) => p),
-        image: formData.image,
+        image: imageUrl,
       }
 
       const response = await fetch("/api/plants", {
@@ -88,6 +112,7 @@ export default function AddPlantModal({ onClose, onAdd }: AddPlantModalProps) {
       console.error("Error adding plant:", err)
     } finally {
       setLoading(false)
+      setUploading(false)
     }
   }
 
@@ -149,13 +174,22 @@ export default function AddPlantModal({ onClose, onAdd }: AddPlantModalProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Image URL</label>
-                <Input
-                  type="url"
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                />
+                <label className="block text-sm font-medium text-foreground mb-1">Image</label>
+                <div className="space-y-2">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                    className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                  />
+                  <p className="text-xs text-muted-foreground">Or enter URL below</p>
+                  <Input
+                    type="url"
+                    value={formData.image}
+                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
               </div>
             </div>
 

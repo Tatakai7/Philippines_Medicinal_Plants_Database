@@ -197,3 +197,34 @@ export async function GET(
     return Response.json(plant)
   }
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const db = await connectDB()
+    const plantsCollection = db.collection("plants")
+
+    const { id } = await params
+    const result = await plantsCollection.deleteOne({ _id: new ObjectId(id) })
+
+    if (result.deletedCount === 0) {
+      return Response.json({ error: "Plant not found" }, { status: 404 })
+    }
+
+    return Response.json({ message: "Plant deleted successfully" })
+  } catch (error) {
+    console.error("Error deleting plant from database:", error)
+    // Fallback to mock data if database connection fails
+    const { id } = await params
+    const plantIndex = plantsData.findIndex(p => p._id === id)
+    if (plantIndex === -1) {
+      return Response.json({ error: "Plant not found" }, { status: 404 })
+    }
+    // Simulate deletion from mock data (note: this won't persist)
+    plantsData.splice(plantIndex, 1)
+    console.log("Simulated deletion from mock plant data for ID:", id)
+    return Response.json({ message: "Plant deleted successfully" })
+  }
+}
