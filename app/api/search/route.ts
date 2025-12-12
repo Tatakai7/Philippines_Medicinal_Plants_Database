@@ -9,7 +9,12 @@ export async function GET(request: Request) {
     const filter = searchParams.get("filter") || "all"
 
     if (!query) {
-      return Response.json([])
+      return Response.json([], {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      })
     }
 
     const db = await connectDB()
@@ -45,9 +50,31 @@ export async function GET(request: Request) {
 
     const results = await plantsCollection.find(searchQuery).toArray()
 
-    return Response.json(results)
+    return Response.json(results, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
   } catch (error) {
     console.error("[v0] Search error:", error)
-    return Response.json({ error: "Search failed" }, { status: 500 })
+    return Response.json({ error: "Search failed" }, {
+      status: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
   }
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  })
 }

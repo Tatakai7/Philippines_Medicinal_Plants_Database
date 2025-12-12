@@ -178,7 +178,11 @@ export async function GET(
     const plantsCollection = db.collection("plants")
 
     const { id } = await params
-    const plant = await plantsCollection.findOne({ _id: new ObjectId(id) })
+    if (!ObjectId.isValid(id)) {
+      throw new Error("Invalid ID")
+    }
+    const queryId = new ObjectId(id)
+    const plant = await plantsCollection.findOne({ _id: queryId })
 
     if (!plant) {
       return Response.json({ error: "Plant not found" }, { status: 404 })
@@ -187,7 +191,7 @@ export async function GET(
     return Response.json(plant)
   } catch (error) {
     console.error("Error fetching plant from database:", error)
-    // Fallback to mock data if database connection fails
+    // Fallback to mock data if database connection fails or invalid ID
     const { id } = await params
     const plant = plantsData.find(p => p._id === id)
     if (!plant) {
@@ -195,6 +199,71 @@ export async function GET(
     }
     console.log("Falling back to mock plant data for ID:", id)
     return Response.json(plant)
+  }
+}
+
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const db = await connectDB()
+    const plantsCollection = db.collection("plants")
+
+    const { id } = await params
+    if (!ObjectId.isValid(id)) {
+      throw new Error("Invalid ID")
+    }
+    const updateData = await request.json()
+    const queryId = new ObjectId(id)
+
+    const result = await plantsCollection.updateOne(
+      { _id: queryId },
+      { $set: updateData }
+    )
+
+    if (result.matchedCount === 0) {
+      return Response.json({ error: "Plant not found" }, {
+        status: 404,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      })
+    }
+
+    // Fetch the updated plant
+    const updatedPlant = await plantsCollection.findOne({ _id: queryId })
+
+    return Response.json({ data: updatedPlant }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
+  } catch (error) {
+    console.error("Error updating plant in database:", error)
+    // Fallback to mock data if database connection fails or invalid ID
+    const { id } = await params
+    const plantIndex = plantsData.findIndex(p => p._id === id)
+    if (plantIndex === -1) {
+      return Response.json({ error: "Plant not found" }, {
+        status: 404,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      })
+    }
+    // Simulate update in mock data (note: this won't persist)
+    plantsData[plantIndex] = { ...plantsData[plantIndex], ...await request.json() }
+    console.log("Simulated update in mock plant data for ID:", id)
+    return Response.json({ data: plantsData[plantIndex] }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
   }
 }
 

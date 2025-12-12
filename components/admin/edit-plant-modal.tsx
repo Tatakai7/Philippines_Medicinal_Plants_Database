@@ -18,19 +18,21 @@ export default function EditPlantModal({ plant, onClose, onUpdate }: EditPlantMo
   const [formData, setFormData] = useState({
     name: plant.name,
     scientificName: plant.scientificName,
-    tagalogName: plant.tagalogName,
-    family: plant.family,
-    genus: plant.genus,
+    tagalogName: plant.tagalogName || "",
+    family: plant.family || "",
+    genus: plant.genus || "",
     description: plant.description,
     category: plant.category.join(", "),
     uses: plant.uses.join("\n"),
     activeCompounds: plant.activeCompounds.join(", "),
     preparation: plant.preparation.join("\n"),
     precautions: plant.precautions.join("\n"),
-    image: plant.image,
+    image: plant.image || "",
   })
 
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [error, setError] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,7 +41,30 @@ export default function EditPlantModal({ plant, onClose, onUpdate }: EditPlantMo
     setError("")
 
     try {
+      let imageUrl = formData.image
+
+      // Upload image if file is selected
+      if (imageFile) {
+        setUploading(true)
+        const uploadFormData = new FormData()
+        uploadFormData.append('file', imageFile)
+
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        })
+
+        if (!uploadResponse.ok) {
+          throw new Error('Failed to upload image')
+        }
+
+        const uploadResult = await uploadResponse.json()
+        imageUrl = uploadResult.url
+        setUploading(false)
+      }
+
       const updatedPlant = {
+        ...plant,
         name: formData.name,
         scientificName: formData.scientificName,
         tagalogName: formData.tagalogName,
@@ -66,7 +91,7 @@ export default function EditPlantModal({ plant, onClose, onUpdate }: EditPlantMo
           .split("\n")
           .map((p) => p.trim())
           .filter((p) => p),
-        image: formData.image,
+        image: imageUrl,
       }
 
       const response = await fetch(`/api/plants/${plant._id}`, {
@@ -89,6 +114,7 @@ export default function EditPlantModal({ plant, onClose, onUpdate }: EditPlantMo
       console.error("Error updating plant:", err)
     } finally {
       setLoading(false)
+      setUploading(false)
     }
   }
 
@@ -133,22 +159,39 @@ export default function EditPlantModal({ plant, onClose, onUpdate }: EditPlantMo
 
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">Family</label>
-                <Input value={formData.family} onChange={(e) => setFormData({ ...formData, family: e.target.value })} placeholder="e.g., Asteraceae" />
+                <Input
+                  value={formData.family}
+                  onChange={(e) => setFormData({ ...formData, family: e.target.value })}
+                  placeholder="e.g., Asteraceae"
+                />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">Genus</label>
-                <Input value={formData.genus} onChange={(e) => setFormData({ ...formData, genus: e.target.value })} placeholder="e.g., Blumea" />
+                <Input
+                  value={formData.genus}
+                  onChange={(e) => setFormData({ ...formData, genus: e.target.value })}
+                  placeholder="e.g., Blumea"
+                />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1">Image URL</label>
-                <Input
-                  type="url"
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                />
+                <label className="block text-sm font-medium text-foreground mb-1">Image</label>
+                <div className="space-y-2">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                    className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                  />
+                  <p className="text-xs text-muted-foreground">Or enter URL below</p>
+                  <Input
+                    type="url"
+                    value={formData.image}
+                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
               </div>
             </div>
 

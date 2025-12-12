@@ -175,12 +175,22 @@ export async function GET(request: Request) {
 
     const plants = await plantsCollection.find({}).toArray()
 
-    return Response.json(plants)
+    return Response.json(plants, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
   } catch (error) {
     console.error("[Error fetching plants from database:", error)
     // Fallback to mock data if database connection fails
     console.log("[Falling back to mock plant data")
-    return Response.json(plantsData)
+    return Response.json(plantsData, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
   }
 }
 
@@ -204,10 +214,33 @@ export async function POST(request: Request) {
         success: true,
         data: { ...newPlant, _id: result.insertedId },
       },
-      { status: 201 },
+      {
+        status: 201,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      },
     )
   } catch (error) {
     console.error("[v0] Error adding plant:", error)
-    return Response.json({ error: "Failed to add plant" }, { status: 500 })
+    return Response.json({ error: "Failed to add plant" }, {
+      status: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
   }
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  })
 }
