@@ -5,13 +5,6 @@ import Navigation from "@/components/navigation"
 import PlantCard from "@/components/plant-card"
 import { Button } from "@/components/ui/button"
 import FeaturedSectionSkeleton from "@/components/skeletons/featured-section-skeleton"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar"
 
 interface Plant {
   _id: string
@@ -82,7 +75,7 @@ export default function BrowsePage() {
   const totalPages = Math.ceil(filteredPlants.length / itemsPerPage)
 
   return (
-    <SidebarProvider>
+    <>
       <Navigation />
       <main className="min-h-screen bg-background">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -167,35 +160,6 @@ export default function BrowsePage() {
           )}
         </div>
       </main>
-
-      {/* Right Sidebar */}
-      <Sidebar side="right" collapsible="icon">
-        <SidebarHeader>
-          <h3 className="font-semibold text-foreground">Filter by Category</h3>
-        </SidebarHeader>
-        <SidebarContent>
-          <div className="space-y-2 p-4">
-            <Button
-              variant={selectedCategory === "" ? "default" : "outline"}
-              onClick={() => handleCategoryFilter("")}
-              className={`w-full justify-start ${selectedCategory === "" ? "bg-primary hover:bg-primary/90" : ""}`}
-            >
-              All Plants
-            </Button>
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => handleCategoryFilter(category)}
-                className={`w-full justify-start ${selectedCategory === category ? "bg-primary hover:bg-primary/90" : ""}`}
-                size="sm"
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
-        </SidebarContent>
-      </Sidebar>
-    </SidebarProvider>
+    </>
   )
 }
