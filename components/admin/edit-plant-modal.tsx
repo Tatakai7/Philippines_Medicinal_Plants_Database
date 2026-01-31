@@ -6,6 +6,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
+import { X } from "lucide-react"
 import type { Plant } from "@/lib/types"
 
 interface EditPlantModalProps {
@@ -120,9 +121,17 @@ export default function EditPlantModal({ plant, onClose, onUpdate }: EditPlantMo
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-foreground mb-6">Edit Plant</h2>
+    <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
+      <div className="p-6">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          className="absolute top-4 right-4 text-red-500 hover:text-red-700 hover:bg-red-50"
+        >
+          <X size={20} />
+        </Button>
+        <h2 className="text-2xl font-bold text-foreground mb-6">Edit Plant</h2>
 
           {error && <div className="mb-4 p-3 bg-destructive/10 text-destructive rounded-lg text-sm">{error}</div>}
 
