@@ -214,7 +214,9 @@ export async function PUT(
     if (!ObjectId.isValid(id)) {
       throw new Error("Invalid ID")
     }
-    const updateData = await request.json()
+    const body = await request.json()
+    const { _id, ...updateData } = body
+    updateData.updatedAt = new Date()
     const queryId = new ObjectId(id)
 
     const result = await plantsCollection.updateOne(
@@ -256,7 +258,10 @@ export async function PUT(
       })
     }
     // Simulate update in mock data (note: this won't persist)
-    plantsData[plantIndex] = { ...plantsData[plantIndex], ...await request.json() }
+    const body = await request.json()
+    const { _id, ...updateData } = body
+    updateData.updatedAt = new Date()
+    plantsData[plantIndex] = { ...plantsData[plantIndex], ...updateData }
     console.log("Simulated update in mock plant data for ID:", id)
     return Response.json({ data: plantsData[plantIndex] }, {
       headers: {
