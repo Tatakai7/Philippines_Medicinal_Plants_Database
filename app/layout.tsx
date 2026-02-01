@@ -12,7 +12,6 @@ export const metadata: Metadata = {
   title: "Philippine Medicinal Plants Database",
   description:
     "Explore the comprehensive database of Philippine medicinal plants, their traditional uses, scientific information, and health benefits.",
-  generator: "v0.app",
   icons: {
     icon: [
       {
