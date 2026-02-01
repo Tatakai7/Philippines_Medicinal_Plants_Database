@@ -1,7 +1,5 @@
-import { connectDB } from "@/lib/db"
-import { ObjectId } from "mongodb"
-
-export const runtime = "nodejs"
+import { connectDB } from '@/lib/db'
+import { ObjectId } from 'mongodb'
 
 // Mock database of Philippine medicinal plants
 const plantsData = [
@@ -173,33 +171,12 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const db = await connectDB()
-    const plantsCollection = db.collection("plants")
-
-    const { id } = await params
-    if (!ObjectId.isValid(id)) {
-      throw new Error("Invalid ID")
-    }
-    const queryId = new ObjectId(id)
-    const plant = await plantsCollection.findOne({ _id: queryId })
-
-    if (!plant) {
-      return Response.json({ error: "Plant not found" }, { status: 404 })
-    }
-
-    return Response.json(plant)
-  } catch (error) {
-    console.error("Error fetching plant from database:", error)
-    // Fallback to mock data if database connection fails or invalid ID
-    const { id } = await params
-    const plant = plantsData.find(p => p._id === id)
-    if (!plant) {
-      return Response.json({ error: "Plant not found" }, { status: 404 })
-    }
-    console.log("Falling back to mock plant data for ID:", id)
-    return Response.json(plant)
+  const { id } = await params
+  const plant = plantsData.find(p => p._id === id)
+  if (!plant) {
+    return Response.json({ error: "Plant not found" }, { status: 404 })
   }
+  return Response.json(plant)
 }
 
 export async function PUT(

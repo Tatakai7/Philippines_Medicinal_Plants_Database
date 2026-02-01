@@ -1,6 +1,6 @@
-import { connectDB } from "@/lib/db"
 
-export const runtime = "nodejs"
+
+import { connectDB } from '@/lib/db'
 
 // Mock database of Philippine medicinal plants
 const plantsData = [
@@ -169,29 +169,13 @@ const plantsData = [
 ]
 
 export async function GET(request: Request) {
-  try {
-    const db = await connectDB()
-    const plantsCollection = db.collection("plants")
-
-    const plants = await plantsCollection.find({}).toArray()
-
-    return Response.json(plants, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    })
-  } catch (error) {
-    console.error("[Error fetching plants from database:", error)
-    // Fallback to mock data if database connection fails
-    console.log("[Falling back to mock plant data")
-    return Response.json(plantsData, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    })
-  }
+  // Return mock data directly
+  return Response.json(plantsData, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  })
 }
 
 export async function POST(request: Request) {
