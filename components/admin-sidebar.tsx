@@ -53,7 +53,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, isOpen, setIsOpe
           ))}
 
           <Link href="/">
-            <Button variant="outline" className="w-full bg-transparent">
+            <Button variant="outline" className="w-full bg-transparent dark:hover:bg-primary dark:hover:text-primary-foreground">
               ← Back to Site
             </Button>
           </Link>
