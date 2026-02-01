@@ -51,9 +51,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, isOpen, setIsOpe
               {item.label}
             </button>
           ))}
-        </div>
 
-        <div className="absolute bottom-6 left-6 right-6">
           <Link href="/">
             <Button variant="outline" className="w-full bg-transparent">
               ← Back to Site
