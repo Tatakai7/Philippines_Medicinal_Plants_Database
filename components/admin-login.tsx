@@ -292,15 +292,6 @@ export default function AdminLogin({ onLoginSuccess }: LoginProps) {
 
             <Button
               type="button"
-              variant="outline"
-              className="w-full"
-              onClick={() => setShowRegister(true)}
-            >
-              Create New Admin Account
-            </Button>
-
-            <Button
-              type="button"
               variant="ghost"
               className="w-full"
               onClick={() => router.push("/")}
