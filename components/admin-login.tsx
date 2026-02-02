@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2, AlertCircle, Eye, EyeOff } from "lucide-react"
+import ForgotPassword from "@/components/forgot-password"
 
 interface LoginProps {
   onLoginSuccess?: () => void
@@ -31,6 +32,7 @@ export default function AdminLogin({ onLoginSuccess }: LoginProps) {
   const [showPassword, setShowPassword] = useState(false)
   const [showRegisterPassword, setShowRegisterPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showForgotPassword, setShowForgotPassword] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -108,6 +110,10 @@ export default function AdminLogin({ onLoginSuccess }: LoginProps) {
     } finally {
       setRegisterLoading(false)
     }
+  }
+
+  if (showForgotPassword) {
+    return <ForgotPassword onBack={() => setShowForgotPassword(false)} />
   }
 
   if (showRegister) {
@@ -289,6 +295,14 @@ export default function AdminLogin({ onLoginSuccess }: LoginProps) {
                 "Sign In"
               )}
             </Button>
+
+            <button
+              type="button"
+              onClick={() => setShowForgotPassword(true)}
+              className="text-sm text-blue-600 hover:text-blue-800 hover:underline w-full text-center"
+            >
+              Forgot Password?
+            </button>
 
             <Button
               type="button"
