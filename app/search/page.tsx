@@ -1,12 +1,18 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState, Suspense } from "react"
+import { useEffect, useState, Suspense, lazy } from "react"
+import dynamic from "next/dynamic"
 import Navigation from "@/components/navigation"
-import PlantCard from "@/components/plant-card"
 import SearchBar from "@/components/search-bar"
 import { Button } from "@/components/ui/button"
 import FeaturedSectionSkeleton from "@/components/skeletons/featured-section-skeleton"
+
+// Lazy load PlantCard component
+const PlantCard = dynamic(() => import("@/components/plant-card"), {
+  loading: () => <div className="bg-muted animate-pulse h-64 rounded-lg" />,
+  ssr: true,
+})
 
 interface Plant {
   _id: string
@@ -24,7 +30,9 @@ function SearchResults({ results }: { results: Plant[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {results.map((plant) => (
-        <PlantCard key={plant._id} plant={plant} />
+        <Suspense key={plant._id} fallback={<div className="bg-muted animate-pulse h-64 rounded-lg" />}>
+          <PlantCard plant={plant} />
+        </Suspense>
       ))}
     </div>
   )
@@ -116,10 +124,8 @@ export default function SearchPage() {
                   <p className="text-muted-foreground">Try different search terms or browse all plants</p>
                 </div>
               ) : (
-                /* wrapped search results with Suspense for progressive rendering */
-                <Suspense fallback={<FeaturedSectionSkeleton />}>
-                  <SearchResults results={results} />
-                </Suspense>
+                /* Lazy-loaded search results with per-item Suspense */
+                <SearchResults results={results} />
               )}
             </>
           )}

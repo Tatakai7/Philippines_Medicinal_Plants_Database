@@ -1,10 +1,16 @@
 "use client"
 
 import { useEffect, useState, Suspense } from "react"
+import dynamic from "next/dynamic"
 import Navigation from "@/components/navigation"
-import PlantCard from "@/components/plant-card"
 import { Button } from "@/components/ui/button"
 import FeaturedSectionSkeleton from "@/components/skeletons/featured-section-skeleton"
+
+// Lazy load PlantCard component
+const PlantCard = dynamic(() => import("@/components/plant-card"), {
+  loading: () => <div className="bg-muted animate-pulse h-64 rounded-lg" />,
+  ssr: true,
+})
 
 interface Plant {
   _id: string
@@ -22,7 +28,9 @@ function PlantsGrid({ plants }: { plants: Plant[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {plants.map((plant) => (
-        <PlantCard key={plant._id} plant={plant} />
+        <Suspense key={plant._id} fallback={<div className="bg-muted animate-pulse h-64 rounded-lg" />}>
+          <PlantCard plant={plant} />
+        </Suspense>
       ))}
     </div>
   )
@@ -120,9 +128,8 @@ export default function BrowsePage() {
             </div>
           ) : (
             <>
-              <Suspense fallback={<FeaturedSectionSkeleton />}>
-                <PlantsGrid plants={paginatedPlants} />
-              </Suspense>
+              {/* Lazy-loaded plants grid with per-item Suspense */}
+              <PlantsGrid plants={paginatedPlants} />
 
               {/* Pagination */}
               {totalPages > 1 && (

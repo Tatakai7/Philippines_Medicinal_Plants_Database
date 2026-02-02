@@ -1,14 +1,24 @@
 "use client"
 
 import Link from "next/link"
+import dynamic from "next/dynamic"
 import { Suspense } from "react"
 import { Button } from "@/components/ui/button"
 import SearchBar from "@/components/search-bar"
 import Navigation from "@/components/navigation"
-import FeaturedPlants from "@/components/featured-plants"
-import InfoSection from "@/components/info-section"
 import FeaturedSectionSkeleton from "@/components/skeletons/featured-section-skeleton"
 import InfoSectionSkeleton from "@/components/skeletons/info-section-skeleton"
+
+// Lazy load heavy components
+const FeaturedPlants = dynamic(() => import("@/components/featured-plants"), {
+  loading: () => <FeaturedSectionSkeleton />,
+  ssr: true,
+})
+
+const InfoSection = dynamic(() => import("@/components/info-section"), {
+  loading: () => <InfoSectionSkeleton />,
+  ssr: true,
+})
 
 interface Plant {
   _id: string
@@ -61,10 +71,8 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Wrapped featured plants with Suspense for progressive rendering */}
-            <Suspense fallback={<FeaturedSectionSkeleton />}>
-              <FeaturedPlants />
-            </Suspense>
+            {/* Lazy-loaded featured plants with dynamic import */}
+            <FeaturedPlants />
 
             <div className="flex justify-center sm:hidden mt-8">
               <Link href="/browse">
@@ -81,10 +89,8 @@ export default function Home() {
               Why Explore Philippine Medicinal Plants?
             </h2>
 
-            {/* Wrapped info section with Suspense for progressive rendering */}
-            <Suspense fallback={<InfoSectionSkeleton />}>
-              <InfoSection />
-            </Suspense>
+            {/* Lazy-loaded info section with dynamic import */}
+            <InfoSection />
           </div>
         </section>
 
