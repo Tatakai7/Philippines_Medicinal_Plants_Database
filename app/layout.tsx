@@ -43,8 +43,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
-      <body className={`${geistSans.className} antialiased`}>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <body className={`${geistSans.className} antialiased`} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
