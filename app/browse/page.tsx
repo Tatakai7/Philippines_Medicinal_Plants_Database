@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react"
 import dynamic from "next/dynamic"
+import Link from "next/link"
 import Navigation from "@/components/navigation"
 import { Button } from "@/components/ui/button"
 import FeaturedSectionSkeleton from "@/components/skeletons/featured-section-skeleton"
@@ -87,6 +88,12 @@ export default function BrowsePage() {
       <Navigation />
       <main className="min-h-screen bg-background">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <Link href="/">
+            <Button variant="outline" className="mb-8">
+              ← Back to Homepage
+            </Button>
+          </Link>
+          
           <div className="mb-12">
             <h1 className="text-4xl font-bold text-foreground mb-2 text-balance">Browse Medicinal Plants</h1>
             <p className="text-muted-foreground mb-8">
