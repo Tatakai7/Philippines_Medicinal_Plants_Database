@@ -71,11 +71,6 @@ export default function AdminSidebar({ activeTab, setActiveTab, isOpen, setIsOpe
           </div>
 
           <div className="space-y-2 border-t border-border pt-4">
-            <Link href="/">
-              <Button variant="outline" className="w-full bg-transparent dark:hover:bg-primary dark:hover:text-primary-foreground">
-                ← Back to Site
-              </Button>
-            </Link>
             <Button
               onClick={handleLogout}
               variant="destructive"
