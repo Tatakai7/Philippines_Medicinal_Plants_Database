@@ -1,7 +1,9 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { LogOut } from "lucide-react"
 
 interface AdminSidebarProps {
   activeTab: string
@@ -11,11 +13,25 @@ interface AdminSidebarProps {
 }
 
 export default function AdminSidebar({ activeTab, setActiveTab, isOpen, setIsOpen }: AdminSidebarProps) {
+  const router = useRouter()
+
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: "📊" },
     { id: "manage-plants", label: "Manage Plants", icon: "🌿" },
     { id: "settings", label: "Settings", icon: "⚙️" },
   ]
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+      })
+      localStorage.removeItem("admin_token")
+      router.push("/admin/login")
+    } catch (error) {
+      console.error("Logout error:", error)
+    }
+  }
 
   return (
     <>
@@ -33,30 +49,42 @@ export default function AdminSidebar({ activeTab, setActiveTab, isOpen, setIsOpe
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
-        <div className="p-6 space-y-2">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">Admin Panel</h3>
+        <div className="p-6 space-y-2 flex flex-col h-full">
+          <div className="flex-1">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-4">Admin Panel</h3>
 
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setActiveTab(item.id)
-                setIsOpen(false)
-              }}
-              className={`w-full text-left px-4 py-3 rounded-lg transition ${
-                activeTab === item.id ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
-              }`}
+            {menuItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id)
+                  setIsOpen(false)
+                }}
+                className={`w-full text-left px-4 py-3 rounded-lg transition ${
+                  activeTab === item.id ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
+                }`}
+              >
+                <span className="mr-2">{item.icon}</span>
+                {item.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="space-y-2 border-t border-border pt-4">
+            <Link href="/">
+              <Button variant="outline" className="w-full bg-transparent dark:hover:bg-primary dark:hover:text-primary-foreground">
+                ← Back to Site
+              </Button>
+            </Link>
+            <Button
+              onClick={handleLogout}
+              variant="destructive"
+              className="w-full"
             >
-              <span className="mr-2">{item.icon}</span>
-              {item.label}
-            </button>
-          ))}
-
-          <Link href="/">
-            <Button variant="outline" className="w-full bg-transparent dark:hover:bg-primary dark:hover:text-primary-foreground">
-              ← Back to Site
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
             </Button>
-          </Link>
+          </div>
         </div>
       </aside>
 

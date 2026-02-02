@@ -16,6 +16,22 @@ export interface Plant {
   updatedAt?: Date
 }
 
+export interface Admin {
+  _id?: string
+  username: string
+  email: string
+  password: string
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+export interface AuthSession {
+  username: string
+  email: string
+  iat?: number
+  exp?: number
+}
+
 export interface SearchParams {
   q: string
   filter: "all" | "name" | "uses"
