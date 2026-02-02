@@ -19,6 +19,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, isOpen, setIsOpe
     { id: "dashboard", label: "Dashboard", icon: "📊" },
     { id: "manage-plants", label: "Manage Plants", icon: "🌿" },
     { id: "settings", label: "Settings", icon: "⚙️" },
+    { id: "logout", label: "Logout", icon: "🚪", isLogout: true },
   ]
 
   const handleLogout = async () => {
@@ -57,11 +58,19 @@ export default function AdminSidebar({ activeTab, setActiveTab, isOpen, setIsOpe
               <button
                 key={item.id}
                 onClick={() => {
-                  setActiveTab(item.id)
-                  setIsOpen(false)
+                  if (item.isLogout) {
+                    handleLogout()
+                  } else {
+                    setActiveTab(item.id)
+                    setIsOpen(false)
+                  }
                 }}
                 className={`w-full text-left px-4 py-3 rounded-lg transition ${
-                  activeTab === item.id ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted"
+                  item.isLogout
+                    ? "text-destructive hover:bg-destructive/10"
+                    : activeTab === item.id
+                    ? "bg-primary text-primary-foreground"
+                    : "text-foreground hover:bg-muted"
                 }`}
               >
                 <span className="mr-2">{item.icon}</span>
@@ -70,15 +79,7 @@ export default function AdminSidebar({ activeTab, setActiveTab, isOpen, setIsOpe
             ))}
           </div>
 
-          <div className="space-y-2 border-t border-border pt-4">
-            <Button
-              onClick={handleLogout}
-              variant="destructive"
-              className="w-full"
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Logout
-            </Button>
+          <div className="border-t border-border pt-4">
           </div>
         </div>
       </aside>
