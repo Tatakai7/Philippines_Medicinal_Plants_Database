@@ -43,30 +43,18 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <html lang="en" data-scroll-behavior="smooth">
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                const theme = localStorage.getItem('theme');
-                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark');
-                }
-              } catch (e) {}
-            `,
-          }}
-        />
-        <body className={`${geistSans.className} antialiased`}>
+    <html lang="en" data-scroll-behavior="smooth">
+      <body className={`${geistSans.className} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           {children}
           <Analytics />
-        </body>
-      </html>
-    </ThemeProvider>
+        </ThemeProvider>
+      </body>
+    </html>
   )
 }
