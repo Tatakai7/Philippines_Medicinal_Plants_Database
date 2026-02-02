@@ -64,7 +64,7 @@ export default function Navigation() {
             )}
           </div>
 
-          <Link href="/admin">
+          <Link href="/admin/login">
             <Button className="bg-primary hover:bg-primary/90" size="sm">
               Admin
             </Button>
