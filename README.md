@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌿 Philippines Medicinal Plants Database
 
-## Getting Started
+An interactive, research‑oriented web application that showcases **traditional Philippine medicinal plants**—their local names, scientific classifications, uses, and cultural significance. Built to support **students, researchers, and health advocates**, this project bridges indigenous knowledge with modern web technology.
 
-First, run the development server:
+---
+
+## ✨ Project Highlights
+
+- 🌱 Curated database of Philippine medicinal plants
+- 🧪 Includes scientific names, common names, and medicinal uses
+- 🖼️ Clean, modern, and responsive UI
+- 🔍 Easy browsing and searching of plant records
+- 📚 Designed for educational and research purposes
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js (React)
+- **Styling:** CSS / Tailwind CSS
+- **Framework:** Node.js
+- **Build Tooling:** Turbopack
+
+---
+
+## 📂 Project Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Philippines_Medicinal_Plants_Database/
+├── philippines_medicinal_plants_database/
+│   ├── .next/                # Build output
+│   ├── public/               # Static assets
+│   ├── src/                  # Application source code
+│   ├── package.json
+│   └── next.config.js
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Prerequisites
 
-## Learn More
+- Node.js (v18+ recommended)
+- npm or yarn
 
-To learn more about Next.js, take a look at the following resources:
+### Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# Install dependencies
+npm install
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Run development server
+npm run dev
+```
 
-## Deploy on Vercel
+Then open your browser at:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+http://localhost:3000
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🎯 Use Cases
+
+- Academic research on herbal medicine
+- Educational reference for students
+- Cultural preservation of indigenous plant knowledge
+- Prototype for health‑tech and biodiversity apps
+
+---
+
+## ⚠️ Disclaimer
+
+This application is for **educational and informational purposes only**. The listed medicinal uses are based on traditional knowledge and references and **should not replace professional medical advice**.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Open a pull request
+
+---
+
+## 📜 License
+
+This project is released under the **MIT License**.
+
+---
+
+## 👤 Author
+
+**Raymond Caberte**
+Passionate Full Stack Developer
+Building meaningful applications that connect culture, technology, and people.
+
+---
+
+⭐ _If you find this project helpful, please consider giving it a star!_
